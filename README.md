@@ -1,6 +1,6 @@
 # Bitburner-scripts
 
-I described the project in Short Description, but will add FAQ here when needed. If you want more info, contact @microlabsz on discord.
+I described the project in Short Description, but will add an FAQ section here when needed. If you want more info, contact @microlabsz on discord.
 
 # Requested changes
 
