@@ -7,3 +7,7 @@ I described the project in Short Description, but will add FAQ here when needed.
 (These are changes that would be liked to be implemented, but not an issue, technically)
 
   -General Improvements
+
+# Contributors:
+    @microlabz
+    @chkchkchkboom
