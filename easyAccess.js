@@ -5,6 +5,7 @@ export async function main(ns) {
     case "list":
       ns.tprint(await getFiles(ns))
       break
+
     case "show":
       let fileName0 = ns.args[1]
       let u0 = "https://raw.githubusercontent.com/ZianConradie/Bitburner-scripts/main/" + fileName0
@@ -13,6 +14,7 @@ export async function main(ns) {
       let data0 = await re0.text()
       ns.tprint(data0)
       break
+
     case "download":
       let fileName1 = ns.args[1]
       let u1 = "https://raw.githubusercontent.com/ZianConradie/Bitburner-scripts/main/" + fileName1
@@ -22,14 +24,42 @@ export async function main(ns) {
       ns.write(fileName1, data1, "w")
       ns.tprint("File Created")
       break
+
+    case "downloadall": {
+      const files = await getFiles()
+      ns.tprint(`Found ${files.length} files. Starting download...`)
+
+      for (const file of files) {
+        const url = "https://raw.githubusercontent.com/ZianConradie/Bitburner-scripts/main/" + file
+        const res = await fetch(url)
+
+        if (!res.ok) {
+          ns.tprint(`❌ Failed: ${file} (HTTP ${res.status})`)
+          continue
+        }
+
+        const text = await res.text()
+        await ns.write(file, text, "w")
+
+        ns.tprint(`✅ Downloaded: ${file}`)
+
+        await ns.sleep(300) // avoid GitHub throttling
+      }
+
+      ns.tprint("🎉 Finished downloading all files!")
+      break
+    }
+
     case "credits":
       ns.tprint("\nMade by ChkChkChkBoom (@chkchkchkboom on Discord)")
       break
+
     case "help":
-      ns.tprint("\nCommands:\nhelp: displays help\ncredits: shows credits\nlist: display file tree\nshow: display a file\ndownload: downloads a file to Bitburner")
+      ns.tprint("\nCommands:\nhelp: displays help\ncredits: shows credits\nlist: display file tree\nshow: display a file\ndownload: downloads a file to Bitburner\ndownloadall: downloads ALL files except LICENSE & README.md")
       break
   }
 }
+
 async function getFiles() {
     const url = "https://api.github.com/repos/ZianConradie/Bitburner-scripts/git/trees/main?recursive=1"
     const res = await fetch(url)
@@ -42,7 +72,15 @@ async function getFiles() {
         console.log("GitHub response:", data)
         throw new Error("GitHub response missing .tree — wrong branch or rate-limited?")
     }
+
+    // ---- IGNORE LIST ----
+    const ignore = new Set([
+        "LICENSE",
+        "README.md"
+    ])
+
     return data.tree
         .filter(entry => entry.type === "blob")
         .map(entry => entry.path)
+        .filter(path => !ignore.has(path))   // <-- ignore files here
 }
