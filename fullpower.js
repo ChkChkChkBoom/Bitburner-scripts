@@ -1,6 +1,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
-     // Where to send to
+    //WILL UPDATE SOON
+    // Where to send to
     const target = ns.args[0]
     // What to send
     const send = ns.args[1]
